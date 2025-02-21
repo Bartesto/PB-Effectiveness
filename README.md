@@ -32,11 +32,11 @@ annual (YYYY) products include:
   from DBCA_060.
   * `wffaYYYY`  - tsfYYYY masked by wfmYYYY that produces the wild fire fuel age raster 
   for that year.
-  * `offaYYYY`  - tsfYYYY masked by ofmYYYY that produces the wild fire fuel age raster 
+  * `offaYYYY`  - tsfYYYY masked by ofmYYYY that produces the other fire fuel age raster 
   for that year.
 
 - Area stats are then calculated by multiplying the pixel count of unique fuel ages 
-by the pixel resolution.
+by the pixel resolution and exported as csv.
 
 ## The YOB to TSF to Fuel Age process in more detail
 
@@ -54,7 +54,7 @@ is the time since fire (tsfYYYY) or also known as year since last burn.
 ![**Time since fire for 1994**](./pics/tsf_stack.png)
 
 
-Next you can construct a fire mask (wild fire or other) for 1995 and use it to 
+Next you can construct a fire mask (all, wild fire or other) for 1995 and use it to 
 crop the time since fire for 1994. This will result in a classified raster that 
 has the fuel ages that the wild fire in 1995 burnt across. Something like below.
 
