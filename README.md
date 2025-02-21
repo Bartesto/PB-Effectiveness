@@ -5,7 +5,7 @@ Department of Biodiversity, Conservation and Attractions Fire History dataset (D
 DBCA_060 is freely available from [data WA
 link](https://catalogue.data.wa.gov.au/dataset/dbca-fire-history).
 
-## Requirements
+### Requirements
 
 - All code is written in R. You will need R (version > 4.0) to run the code.
 
@@ -14,7 +14,46 @@ The data is periodically updated so it always pays to refresh your copy of DBCA_
 
 - A shapefile of your area of interest (AOI).
 
-## The Basic Process
+### The AOI Shapefile
+
+The AOI shapefile used in the development of this code was a DBCA region, further 
+subset to DBCA tenure. If using something similar ensure that if it has single part 
+geometry it has been converted to multipart and dissolved. 
+
+To further focus on specific vegetation types, the above shapefile should then been 
+further subset to reflect this.
+
+The shapefile can have any CRS as it will be transformed to EPSG:9473 
+(GDA2020 Australian Albers) to allow for calculations in meters. Note output units 
+of area are hectares.
+
+### Notes on Processing
+
+The R script in this repository, `single_aoi_fa.R`, has been written to take one 
+aoi and produce three csv fuel age matrices (as csv files), all fires fuel age, 
+wild fires fuel age and other fires fuel age.
+
+The script can be readily adapted to loop over a number of aoi's if required but 
+bear in mind that large rasters can be very memory intensive and slow to process.
+
+The DBCA_060 data set is very large and unwieldy and covers the whole State. Using 
+the spatial extents of your aoi, the data set is subset as it is read into memory. 
+As it is reading in data based on extent, where possible avoid constructing aoi's 
+that might contain very large areas of no interest between polygons as these areas 
+outside of the aoi polygons will still be processed (but not included in the results).
+
+If the above behaviour can't be avoided (perhaps the requirement is to process and 
+report on the entire south west for example) there is a work around. The script 
+`00_preprocess_firescar_vectors_to_raster_base_data.R` found in the [Remote Sensing 
+and Spatial Analysis Program's github](https://github.com/RSPaW/fire_metrics/tree/main) 
+can be modified to produce the three essential annual products, `byYYYY`, `yobYYYY` and
+`tsfYYYY`. The pre-amble for the script contains 3 functions that will assess the user 
+aoi size and if necessary, spilt it into chunks that can be looped over to process 
+large areas. The `00_preprocess_firescar_vectors_to_raster_base_data.R` isn't completely 
+interchangeable with this workflow but it should contain enough to get you started 
+on modifications.
+
+### The Basic Process
 
 - The spatial extent of your AOI will be used to extract historical fire vectors 
 from DBCA_060.
@@ -38,7 +77,7 @@ annual (YYYY) products include:
 - Area stats are then calculated by multiplying the pixel count of unique fuel ages 
 by the pixel resolution and exported as csv.
 
-## The YOB to TSF to Fuel Age process in more detail
+### The YOB to TSF to Fuel Age process in more detail
 
 If you were to look at all of the fire scar data from the 1991 to the 1994 
 in your AOI it might look like the below. To arrive at this we have stacked the 
